@@ -1,0 +1,310 @@
+.main{
+  flex: 1;
+  min-height: 100vh;
+  padding-bottom: 15vh;
+  position: relative;
+}
+
+.main .nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 30px;
+  padding: 20px;
+  font-weight: bold;
+  color: rgba(53, 70, 232, 0.804);
+}
+
+.main .nav p{
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.main .nav p:hover{
+  color: #6c1deb;
+  transform: scale(1.05);
+}
+
+.main .nav img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  object-fit: cover;
+}
+
+.main .nav img:hover{
+  transform: scale(1.08);
+}
+
+.main-container{
+  max-width: 900px;
+  margin: auto;
+}
+
+.main .greet{
+  margin: 50px 0px;
+  font-size: 56px;
+  color: #c4c7c5;
+  font-weight: 500;
+  padding: 20px;
+}
+
+.main .greet span{
+  background: -webkit-linear-gradient(16deg, #530c77,#1dc2eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.main .cards{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+.main .card{
+  height: 200px;
+  padding: 25px;
+  background-color: #f0f4f9;
+  border-radius: 40px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.main .card img{
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  position: absolute;
+  background-color: white;
+  border-radius: 20px;
+  bottom: 15px;
+  right: 15px;
+}
+
+.main .card p{
+  color: #606110;
+}
+
+.main .card:hover{
+  background-color: #e2e6eb;
+  transform: scale(1.03);
+}
+
+/* ---------- Bottom/search ---------- */
+
+.main-bottom{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  max-width: 900px;
+  padding: 0px 20px;
+  margin: auto;
+}
+
+.search-box{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+  background-color: #f0f4f9;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+}
+
+.search-box img{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.search-box input{
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 18px;
+}
+
+.search-box div{
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.send-btn{
+  border: none;
+  background: transparent;
+  padding: 0;
+  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.send-btn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Result area ---------- */
+
+.result{
+  padding: 0px 5%;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.result::-webkit-scrollbar{
+  display: none;
+}
+
+.result-title{
+  margin: 40px 0px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.result img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.result-data{
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* ---------- Loader ---------- */
+
+.loader{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loader hr{
+  border-radius: 4px;
+  border: none;
+  background-color: #f6f7f8;
+  background: linear-gradient(to right, #9ed7ff, #ffffff, #9ed7ff);
+  background-size: 800px 50px;
+  height: 20px;
+  animation: loader 1.2s linear infinite;
+}
+
+@keyframes loader{
+  0% { background-position: -800px 0; }
+  100% { background-position: 800px 0; }
+}
+
+/* ---------- Zyra logo + rainbow ring ---------- */
+
+/* Wrapper defines the outer badge size */
+.logo-wrapper{
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+}
+
+.logo-wrapper:hover{
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+  animation: spin 4s alternate infinite;
+}
+
+/* The rainbow ring (static by default) */
+.logo-wrapper::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 3px; /* ring thickness */
+  background: conic-gradient(
+    red,
+    orange,
+    yellow,
+    green,
+    blue,
+    indigo,
+    violet,
+    red
+  );
+  /* Hollow ring using mask */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Spin the ring only while loading */
+.logo-wrapper.spin::before{
+  animation: ring-spin 1.2s linear infinite;
+}
+
+/* Reduced motion: no animation */
+@media (prefers-reduced-motion: reduce){
+  .logo-wrapper.spin::before{
+    animation: none;
+  }
+}
+
+/* The actual logo image */
+.zyra-logo{
+  width: 64px;
+  height: 64px;
+  display: block;
+  border-radius: 50%;
+  object-fit: contain;   /* expect transparent PNG/SVG */
+  background: transparent;
+}
+
+/* Keyframes for the ring */
+@keyframes ring-spin{
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Misc ---------- */
+
+.main .bottom-info{
+  font-size: 15px;
+  margin: 15px auto;
+  text-align: center;
+  font-weight: 300;
+  color: rgb(49, 48, 48);
+}
+
+.main .bottom-info span{
+  color: #390889;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.main .bottom-info span:hover{
+  color: #6c1deb;
+}
+
+
+.result-data p{
+    line-height: 1.8;
+    font-weight: 300;
+    font-size: 17px;
+
+}
