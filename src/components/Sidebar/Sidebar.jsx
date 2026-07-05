@@ -1,50 +1,102 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import "./Sidebar.css";
-import { assets } from "../../assets/assets";
+import { Context } from "../../contexts/context";
+import {
+  IconHistory,
+  IconMenu,
+  IconMoon,
+  IconPlus,
+  IconSun,
+  IconTrash,
+} from "../icons/Icons";
 
 const Sidebar = () => {
   const [extended, setExtended] = useState(false);
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("Sidebar must be rendered inside <ContextProvider>.");
+
+  const {
+    conversations,
+    activeConversation,
+    newChat,
+    selectConversation,
+    deleteConversation,
+    theme,
+    toggleTheme,
+  } = ctx;
+
+  const handleDelete = (event, id) => {
+    event.stopPropagation();
+    deleteConversation(id);
+  };
 
   return (
-    <div className="sidebar">
-      <div className="top">
-        <img
+    <aside className={`sidebar ${extended ? "sidebar--extended" : ""}`}>
+      <div className="sidebar-top">
+        <button
+          type="button"
+          className="icon-button"
           onClick={() => setExtended((prev) => !prev)}
-          className="menu"
-          src={assets.menu_icon}
-          alt=""
-        />
-        <div className="new-chat">
-          <img src={assets.plus_icon} alt="" />
-          {extended ? <p>New Chat</p> : null}
-        </div>
-        {extended ? (
-          <div className="recent">
+          aria-label={extended ? "Collapse sidebar" : "Expand sidebar"}
+          aria-expanded={extended}
+        >
+          <IconMenu />
+        </button>
+
+        <button type="button" className="new-chat" onClick={newChat}>
+          <IconPlus size={18} />
+          <span className="new-chat-label">New chat</span>
+        </button>
+
+        {extended && (
+          <nav className="recent" aria-label="Conversation history">
             <p className="recent-title">Recent</p>
-            <div className="recent-entry">
-              <img src={assets.message_icon} alt="" />
-              <p> What is React...</p>
-            </div>
-          </div>
-        ) : null}
+            {conversations.length === 0 ? (
+              <p className="recent-empty">Your conversations will show up here.</p>
+            ) : (
+              <ul className="recent-list">
+                {conversations.map((conversation) => (
+                  <li className="recent-item" key={conversation.id}>
+                    <button
+                      type="button"
+                      className={`recent-entry ${
+                        conversation.id === activeConversation?.id ? "recent-entry--active" : ""
+                      }`}
+                      onClick={() => selectConversation(conversation.id)}
+                      title={conversation.title}
+                      aria-current={conversation.id === activeConversation?.id}
+                    >
+                      <IconHistory size={16} />
+                      <span>{conversation.title}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className="recent-delete"
+                      aria-label={`Delete "${conversation.title}"`}
+                      onClick={(event) => handleDelete(event, conversation.id)}
+                    >
+                      <IconTrash size={14} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </nav>
+        )}
       </div>
-      <div className="bottom">
-        <div className="bottom-item recent-entry">
-          <img src={assets.question_icon} alt="" />
-          {extended ? <p>Help</p> : null}
-        </div>
 
-        <div className="bottom-item recent-entry">
-          <img src={assets.history_icon} alt="" />
-          {extended ? <p>Activity</p> : null}
-        </div>
-
-        <div className="bottom-item recent-entry">
-          <img src={assets.setting_icon} alt="" />
-          {extended ? <p>Settings</p> : null}
-        </div>
+      <div className="sidebar-bottom">
+        <button
+          type="button"
+          className="icon-button theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+        >
+          {theme === "dark" ? <IconSun /> : <IconMoon />}
+          {extended && <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>}
+        </button>
       </div>
-    </div>
+    </aside>
   );
 };
 

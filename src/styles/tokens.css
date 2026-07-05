@@ -1,0 +1,84 @@
+/* Design tokens — single source of truth for color, spacing, type, motion. */
+
+:root {
+  /* Brand gradient: violet -> cyan */
+  --brand-violet-900: #2e0a47;
+  --brand-violet-700: #530c77;
+  --brand-violet-500: #6c1deb;
+  --brand-cyan-500: #1dc2eb;
+  --brand-cyan-300: #6fe0ff;
+  --gradient-brand: linear-gradient(135deg, var(--brand-violet-700) 0%, var(--brand-violet-500) 45%, var(--brand-cyan-500) 100%);
+  --gradient-brand-soft: linear-gradient(135deg, rgba(83, 12, 119, 0.12) 0%, rgba(29, 194, 235, 0.12) 100%);
+
+  /* Light theme surface + text */
+  --color-bg: #fbfbfd;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f3f2f9;
+  --color-surface-sunken: #eef0f7;
+  --color-border: #e3e2ee;
+  --color-text: #1c1b29;
+  --color-text-muted: #66647a;
+  --color-text-faint: #9694a8;
+  --color-accent: var(--brand-violet-500);
+  --color-accent-contrast: #ffffff;
+  --color-danger: #d64545;
+  --color-danger-bg: #fdeaea;
+  --shadow-color: 250deg 30% 50%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.08);
+  --shadow-md: 0 8px 24px -8px hsl(var(--shadow-color) / 0.18);
+  --shadow-lg: 0 20px 45px -12px hsl(var(--shadow-color) / 0.28);
+  --scrollbar-thumb: rgba(28, 27, 41, 0.18);
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius scale */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;
+
+  /* Typography */
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-hero: clamp(2rem, 1.4rem + 2.5vw, 3.25rem);
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 450ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] {
+  --color-bg: #131019;
+  --color-surface: #1c1826;
+  --color-surface-raised: #241f32;
+  --color-surface-sunken: #17131f;
+  --color-border: #322b41;
+  --color-text: #f1eef9;
+  --color-text-muted: #b3adc7;
+  --color-text-faint: #7d7791;
+  --color-accent: var(--brand-cyan-300);
+  --color-accent-contrast: #12111a;
+  --color-danger: #ff8080;
+  --color-danger-bg: #3a1c22;
+  --shadow-color: 260deg 60% 3%;
+  --shadow-sm: 0 1px 2px hsl(var(--shadow-color) / 0.4);
+  --shadow-md: 0 8px 24px -8px hsl(var(--shadow-color) / 0.55);
+  --shadow-lg: 0 24px 55px -15px hsl(var(--shadow-color) / 0.7);
+  --scrollbar-thumb: rgba(241, 238, 249, 0.18);
+  --gradient-brand-soft: linear-gradient(135deg, rgba(108, 29, 235, 0.22) 0%, rgba(29, 194, 235, 0.16) 100%);
+}
