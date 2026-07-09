@@ -1,12 +1,12 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const MODEL_NAME = "gemini-flash-latest";
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY?.trim();
 
-let genAI = null;
+let ai = null;
 if (apiKey) {
-  genAI = new GoogleGenerativeAI(apiKey);
+  ai = new GoogleGenAI({ apiKey });
 }
 
 /**
@@ -14,11 +14,13 @@ if (apiKey) {
  * @returns {Promise<string>}
  */
 export async function generateText(prompt) {
-  if (!genAI) {
+  if (!ai) {
     throw new Error("Missing VITE_GEMINI_API_KEY in environment.");
   }
 
-  const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-  const result = await model.generateContent(prompt);
-  return result.response.text();
+  const response = await ai.models.generateContent({
+    model: MODEL_NAME,
+    contents: prompt,
+  });
+  return response.text;
 }
