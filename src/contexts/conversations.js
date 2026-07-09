@@ -49,8 +49,12 @@ export function createMessage(role, text, extra = {}) {
   return { id: crypto.randomUUID(), role, text, ...extra };
 }
 
+function escapeHtml(text) {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 export function formatAnswerHtml(text) {
-  return text
+  return escapeHtml(text)
     .split("**")
     .map((chunk, i) => (i % 2 ? `<b>${chunk}</b>` : chunk))
     .join("")

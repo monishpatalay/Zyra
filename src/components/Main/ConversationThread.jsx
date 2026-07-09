@@ -23,7 +23,9 @@ function AssistantText({ message, animate }) {
 }
 
 function ConversationThread() {
-  const { activeConversation, loading, justCompletedId } = useContext(Context);
+  const ctx = useContext(Context);
+  if (!ctx) throw new Error("ConversationThread must be rendered inside <ContextProvider>.");
+  const { activeConversation, loading, justCompletedId } = ctx;
   const bottomRef = useRef(null);
 
   useEffect(() => {

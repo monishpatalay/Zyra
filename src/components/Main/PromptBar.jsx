@@ -4,6 +4,7 @@ import { IconGallery, IconMic, IconSend } from "../icons/Icons";
 
 function PromptBar() {
   const ctx = useContext(Context);
+  if (!ctx) throw new Error("PromptBar must be rendered inside <ContextProvider>.");
   const { input, setInput, sendMessage, loading } = ctx;
   const inputId = useId();
 
