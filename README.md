@@ -2,7 +2,7 @@
 
 An AI chat assistant powered by Google's Gemini API — multi-turn conversations, a sidebar with real chat history, and light/dark themes, all in a single-page React app.
 
-**Live app:** https://zyra-sigma.vercel.app
+**Live app:** https://zyra.monishpatalay.dev
 
 ## Features
 
