@@ -49,15 +49,25 @@ export function createMessage(role, text, extra = {}) {
   return { id: crypto.randomUUID(), role, text, ...extra };
 }
 
-function escapeHtml(text) {
-  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
-
-export function formatAnswerHtml(text) {
-  return escapeHtml(text)
-    .split("**")
-    .map((chunk, i) => (i % 2 ? `<b>${chunk}</b>` : chunk))
-    .join("")
-    .split("*")
-    .join("<br>");
+/**
+ * Tokenizes assistant answer text into renderable pieces, preserving the
+ * existing "**bold**" / "*line break*" convention without ever building an
+ * HTML string (so callers can render real React nodes instead of relying on
+ * dangerouslySetInnerHTML).
+ * @param {string} text
+ * @returns {Array<{ type: "word", text: string, bold: boolean } | { type: "break" }>}
+ */
+export function parseAnswerTokens(text) {
+  const tokens = [];
+  text.split("**").forEach((chunk, chunkIndex) => {
+    const bold = chunkIndex % 2 === 1;
+    chunk.split("*").forEach((line, lineIndex) => {
+      if (lineIndex > 0) tokens.push({ type: "break" });
+      line
+        .split(" ")
+        .filter(Boolean)
+        .forEach((word) => tokens.push({ type: "word", text: word, bold }));
+    });
+  });
+  return tokens;
 }

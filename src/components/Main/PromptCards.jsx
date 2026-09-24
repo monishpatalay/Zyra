@@ -1,3 +1,4 @@
+import { motion as Motion, useReducedMotion } from "motion/react";
 import { IconBulb, IconCode, IconCompass, IconMessage } from "../icons/Icons";
 
 const CARDS = [
@@ -19,23 +20,43 @@ const CARDS = [
   },
 ];
 
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0 },
+};
+
 function PromptCards({ onSelect }) {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <div className="cards">
+    <Motion.div
+      className="cards"
+      variants={reduceMotion ? undefined : containerVariants}
+      initial={reduceMotion ? false : "hidden"}
+      animate="visible"
+    >
       {CARDS.map((card) => (
-        <button
+        <Motion.button
           type="button"
           className="card"
           key={card.text}
           onClick={() => onSelect(card.text)}
+          variants={reduceMotion ? undefined : cardVariants}
+          whileHover={{ y: -3 }}
+          whileTap={{ scale: 0.98 }}
         >
           <p>{card.text}</p>
           <span className="card-icon">
             <card.Icon size={20} />
           </span>
-        </button>
+        </Motion.button>
       ))}
-    </div>
+    </Motion.div>
   );
 }
 

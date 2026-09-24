@@ -4,7 +4,6 @@ import { Context } from "./context";
 import {
   createConversation,
   createMessage,
-  formatAnswerHtml,
   loadActiveConversationId,
   loadConversations,
   saveActiveConversationId,
@@ -99,7 +98,7 @@ export default function ContextProvider({ children }) {
 
       try {
         const text = await generateText(q);
-        const message = createMessage("assistant", formatAnswerHtml(text));
+        const message = createMessage("assistant", text);
         appendMessage(conversationId, message);
         setJustCompletedId(message.id);
       } catch (err) {

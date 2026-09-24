@@ -1,25 +1,52 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
+import { motion as Motion, useReducedMotion } from "motion/react";
 import { Context } from "../../contexts/context";
+import { parseAnswerTokens } from "../../contexts/conversations";
 import { IconAlert, IconLogo, IconUser } from "../icons/Icons";
 
-const REVEAL_WORD_DELAY_MS = 45;
+const WORD_STAGGER_S = 0.045;
 
-function AssistantText({ message, animate }) {
-  const words = useMemo(() => message.text.split(" "), [message.text]);
-  const [revealedCount, setRevealedCount] = useState(animate ? 0 : words.length);
+const wordContainerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: WORD_STAGGER_S } },
+};
 
-  useEffect(() => {
-    if (!animate) return undefined;
-    setRevealedCount(0);
-    const timeouts = words.map((_, i) =>
-      setTimeout(() => setRevealedCount((count) => Math.max(count, i + 1)), REVEAL_WORD_DELAY_MS * i),
-    );
-    return () => timeouts.forEach(clearTimeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [message.id]);
+const wordVariants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: "easeOut" } },
+};
 
-  const visibleHtml = words.slice(0, revealedCount).join(" ");
-  return <p className="message-text" dangerouslySetInnerHTML={{ __html: visibleHtml }} />;
+const messageVariants = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0 },
+};
+
+function AssistantText({ message, animate, reduceMotion }) {
+  const tokens = useMemo(() => parseAnswerTokens(message.text), [message.text]);
+  const shouldStagger = animate && !reduceMotion;
+
+  return (
+    <Motion.p
+      className="message-text"
+      variants={shouldStagger ? wordContainerVariants : undefined}
+      initial={shouldStagger ? "hidden" : false}
+      animate="visible"
+    >
+      {tokens.map((token, i) =>
+        token.type === "break" ? (
+          <br key={i} />
+        ) : (
+          <Motion.span
+            key={i}
+            variants={shouldStagger ? wordVariants : undefined}
+            style={token.bold ? { fontWeight: 700 } : undefined}
+          >
+            {token.text}{" "}
+          </Motion.span>
+        ),
+      )}
+    </Motion.p>
+  );
 }
 
 function ConversationThread() {
@@ -27,6 +54,7 @@ function ConversationThread() {
   if (!ctx) throw new Error("ConversationThread must be rendered inside <ContextProvider>.");
   const { activeConversation, loading, justCompletedId } = ctx;
   const bottomRef = useRef(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
@@ -38,14 +66,26 @@ function ConversationThread() {
     <div className="thread">
       {activeConversation.messages.map((message) =>
         message.role === "user" ? (
-          <div className="message message--user" key={message.id}>
+          <Motion.div
+            className="message message--user"
+            key={message.id}
+            variants={messageVariants}
+            initial={reduceMotion ? false : "hidden"}
+            animate="visible"
+          >
             <span className="avatar avatar--user">
               <IconUser size={20} />
             </span>
             <p className="message-text">{message.text}</p>
-          </div>
+          </Motion.div>
         ) : (
-          <div className="message message--assistant" key={message.id}>
+          <Motion.div
+            className="message message--assistant"
+            key={message.id}
+            variants={messageVariants}
+            initial={reduceMotion ? false : "hidden"}
+            animate="visible"
+          >
             <span className="logo-wrapper" aria-hidden="true">
               <IconLogo size={22} />
             </span>
@@ -58,9 +98,13 @@ function ConversationThread() {
                 </div>
               </div>
             ) : (
-              <AssistantText message={message} animate={message.id === justCompletedId} />
+              <AssistantText
+                message={message}
+                animate={message.id === justCompletedId}
+                reduceMotion={reduceMotion}
+              />
             )}
-          </div>
+          </Motion.div>
         ),
       )}
 

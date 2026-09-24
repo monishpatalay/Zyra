@@ -1,4 +1,5 @@
 import { useContext, useId } from "react";
+import { motion as Motion } from "motion/react";
 import { Context } from "../../contexts/context";
 import { IconGallery, IconMic, IconSend } from "../icons/Icons";
 
@@ -36,14 +37,16 @@ function PromptBar() {
           <IconMic size={20} />
           <span className="visually-hidden">Voice input (coming soon)</span>
         </button>
-        <button
+        <Motion.button
           type="submit"
           className="send-btn"
           disabled={loading || !input.trim()}
           aria-label="Send prompt"
+          whileTap={loading || !input.trim() ? undefined : { scale: 0.9 }}
+          whileHover={loading || !input.trim() ? undefined : { scale: 1.06 }}
         >
           <IconSend size={20} />
-        </button>
+        </Motion.button>
       </div>
     </form>
   );

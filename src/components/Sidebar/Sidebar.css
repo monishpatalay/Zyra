@@ -208,6 +208,12 @@
   font-size: var(--text-sm);
 }
 
+.theme-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .sidebar:not(.sidebar--extended) .theme-toggle {
   width: 44px;
   justify-content: center;
