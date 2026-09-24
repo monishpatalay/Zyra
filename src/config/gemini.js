@@ -1,6 +1,8 @@
 import { GoogleGenAI } from "@google/genai";
 
-const MODEL_NAME = "gemini-flash-latest";
+// Tried in order; the next one is used when a model is overloaded or rate-limited.
+const MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"];
+const RETRYABLE_STATUS = new Set([429, 503]);
 
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY?.trim();
 
@@ -18,9 +20,15 @@ export async function generateText(prompt) {
     throw new Error("Missing VITE_GEMINI_API_KEY in environment.");
   }
 
-  const response = await ai.models.generateContent({
-    model: MODEL_NAME,
-    contents: prompt,
-  });
-  return response.text;
+  let lastError;
+  for (const model of MODELS) {
+    try {
+      const response = await ai.models.generateContent({ model, contents: prompt });
+      return response.text;
+    } catch (error) {
+      if (!RETRYABLE_STATUS.has(error?.status)) throw error;
+      lastError = error;
+    }
+  }
+  throw lastError;
 }
